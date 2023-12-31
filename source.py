@@ -1,22 +1,25 @@
-# Import necessary libraries
+import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
-from sklearn.cluster import SpectralClustering
+from sklearn.cluster import KMeans
 
 # Generate a Karate Club graph using NetworkX
 G = nx.karate_club_graph()
 
-# Obtain the adjacency matrix of the graph
-adjacency_matrix = nx.adjacency_matrix(G)
+# Obtain the Laplacian matrix of the graph
+laplacian_matrix = nx.laplacian_matrix(G).toarray()
 
-# Set the number of clusters for spectral clustering
-n_clusters = 4
+# Calculate the eigenvalues and eigenvectors of the Laplacian matrix
+eigenvalues, eigenvectors = np.linalg.eigh(laplacian_matrix)
 
-# Create a SpectralClustering object with specified parameters
-spectral = SpectralClustering(n_clusters=n_clusters, affinity='precomputed', random_state=42)
+# Choose the smallest k eigenvalues and corresponding eigenvectors
+k = 4
+selected_eigenvalues = eigenvalues[:k]
+selected_eigenvectors = eigenvectors[:, :k]
 
-# Fit the spectral clustering model and obtain cluster labels
-labels = spectral.fit_predict(adjacency_matrix)
+# Perform KMeans clustering on the selected eigenvectors
+kmeans = KMeans(n_clusters=k, random_state=42)
+labels = kmeans.fit_predict(selected_eigenvectors)
 
 # Define the layout for node positioning
 pos = nx.spring_layout(G)
