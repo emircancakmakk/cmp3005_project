@@ -29,7 +29,7 @@ def measure_spectral_clustering_time(graph):
     print(f"Time taken for spectral clustering on a graph of size {len(graph.nodes)}: {elapsed_time} seconds")
 
     # Define the layout for node positioning
-    pos = nx.spring_layout(graph)
+    pos = nx.spring_layout(G)
 
     # Set node size, edge color, and colormap for visualization
     node_size = 200
@@ -45,9 +45,5 @@ def measure_spectral_clustering_time(graph):
     # Display the plot
     plt.show()
 
-# Generate graphs of varying sizes
-graph_sizes = [10, 50, 200, 1000]
-
-for size in graph_sizes:
-    G = nx.erdos_renyi_graph(size, p=0.1)
-    measure_spectral_clustering_time(G)
+G = nx.karate_club_graph()
+measure_spectral_clustering_time(G)
